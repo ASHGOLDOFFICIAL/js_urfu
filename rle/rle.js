@@ -1,10 +1,10 @@
 let fs = require("fs")
 
 
-function main(command, inputFileName, outputFileName) {
+function main(command, fileName1, fileName2) {
     //console.log(command, inputFileName, outputFileName)
     
-    if (!command || !inputFileName || !outputFileName) {
+    if (!command || !fileName1 || !fileName2) {
         console.error("Not enough arguments!")
         return
     }
@@ -16,7 +16,7 @@ function main(command, inputFileName, outputFileName) {
         //    commandFunc = check
         //    break
         case "code":
-            commandFunc = code
+            commandFunc = encode
             break
         case "decode":
             commandFunc = decode
@@ -25,30 +25,33 @@ function main(command, inputFileName, outputFileName) {
             console.error("Unknown command: " + command)
             return
     }
-    
+
     // Attempt to read input file
     let inText
     try {
-        inText = fs.readFileSync(inputFileName, {encoding: "utf-8"})
+        inText = fs.readFileSync(fileName1, {encoding: "utf-8"})
     } catch (err) {
-        console.error("Read error!")
+        console.error(`Read error: ${err}`)
         return
     }
-    
-    //console.log(inText, inText.slice(-1))
 
+    //console.log(inText, inText.slice(-1))
+    
+    
     // Attempt to write to output file if needed
-    let outText = commandFunc(inText)
+    const { outText, message } = commandFunc(inText)
     try {
-        fs.writeFileSync(outputFileName, outText)
+        fs.writeFileSync(fileName2, outText)
     } catch (err) {
-        console.error("Write error!")
+        console.error(`Write error: ${err}`)
         return
     }
+
+    console.log(message)
 }
 
 
-function codeSequence(char, count) {
+function encodeSequence(char, count) {
     let out = ""
 
     if ((count > 3) || (char === '#')) {
@@ -63,55 +66,59 @@ function codeSequence(char, count) {
 }
 
 
-function code(text) {
-    let lastChar = text[0]
+function encode(input) {
+    let lastChar = input[0]
     let count = 0
     let out = ""
     
-    for (let i = 0; i < text.length; i++) {
-        if (lastChar === text[i]) {
+    for (let i = 0; i < input.length; i++) {
+        if (lastChar === input[i]) {
             count++
-            if (i === text.length - 1) {
-                out += codeSequence(lastChar, count)
+            if (i === input.length - 1) {
+                out += encodeSequence(lastChar, count)
             }
         } else {
-            out += codeSequence(lastChar, count)
-            lastChar = text[i]
+            out += encodeSequence(lastChar, count)
+            lastChar = input[i]
             count = 1
         }
     }
-    
-    return out
+    const message = "File's compressed." +
+        `\nCompression ratio: ${input.length / out.length}`
+
+    return { outText: out, message }
 }
 
 
-function decode(text) {
+function decode(input) {
     let out = ""
 
-    for (let i = 0; i < text.length; i++) {
+    for (let i = 0; i < input.length; i++) {
         //console.log(...text.slice(i, i+3))
         
-        if (text[i] === "#") {
-            out += text[i+2].repeat(text[i+1].charCodeAt(0))
+        if (input[i] === "#") {
+            out += input[i+2].repeat(input[i+1].charCodeAt(0))
             i += 2 // skip next two characters
             continue
         }
-        out += text[i]
+        out += input[i]
     }
-
-    return out
+    
+    const message = "File's decompressed."
+    return { outText: out, message }
 }
 
 
 // Doesn't work, because when reading
 // from file additional newline char appears.
 function check(text) {
-    let encodedText = code(text)
-    let decodedText = decode(encodedText)
-    return `Original: ${text}\n` +
-        `Decoded: ${decodedText}\n\n` +
-        `Result: ${(text === decodedText) ? "Sussess" : "Fail"}`
+    const encodedText = encode(text)
+    const decodedText = decode(encodedText)
+    return `Original: ${text}` +
+        `\nDecoded: ${decodedText}` +
+        `\n\nResult: ${(text === decodedText) ? "Sussess" : "Fail"}`
 }
 
 
 main(...process.argv.slice(2, 5))
+
