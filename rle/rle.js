@@ -74,14 +74,15 @@ function encode(input) {
     for (let i = 0; i < input.length; i++) {
         if (lastChar === input[i]) {
             count++
-            if (i === input.length - 1) {
-                out += encodeSequence(lastChar, count)
-            }
         } else {
             out += encodeSequence(lastChar, count)
             lastChar = input[i]
             count = 1
         }
+
+        if (i === input.length - 1) {
+            out += encodeSequence(lastChar, count)
+        }        
     }
     const message = "File's compressed." +
         `\nCompression ratio: ${input.length / out.length}`
