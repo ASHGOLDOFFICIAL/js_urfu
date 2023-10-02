@@ -12,9 +12,9 @@ function main(command, fileName1, fileName2) {
     // Check if given command exists and select the function if it does
     let commandFunc
     switch (command) {
-        //case "check":
-        //    commandFunc = check
-        //    break
+        case "check":
+            commandFunc = check
+            break
         case "code":
             commandFunc = encode
             break
@@ -82,7 +82,7 @@ function encode(input) {
 
         if (i === input.length - 1) {
             out += encodeSequence(lastChar, count)
-        }        
+        }
     }
     const message = "File's compressed." +
         `\nCompression ratio: ${input.length / out.length}`
@@ -113,11 +113,13 @@ function decode(input) {
 // Doesn't work, because when reading
 // from file additional newline char appears.
 function check(text) {
-    const encodedText = encode(text)
-    const decodedText = decode(encodedText)
-    return `Original: ${text}` +
+    const encodedText = encode(text).outText
+    // Newline character's added to imitate file in system
+    const decodedText = decode(encodedText).outText
+    const out = `Original: ${text}` +
         `\nDecoded: ${decodedText}` +
         `\n\nResult: ${(text === decodedText) ? "Sussess" : "Fail"}`
+    return { outText: out, message: out }
 }
 
 
