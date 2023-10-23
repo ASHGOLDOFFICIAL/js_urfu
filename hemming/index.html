@@ -3,33 +3,34 @@
 
 <head>
     <title>Hemming Code</title>
-    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
     <script defer src="./hemming.js"></script>
 </head>
 
 <body>
-    <div>
-        <header>
-            <h1>Shaat, Hemming Code</h1>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Shaat, Hemming Code</h1>
         </header>
-        <main>
-            <div>
+        <main class="main">
+            <div class="field">
                 <label for="input">Ввод:</label>
-                <input id="input" type="text" maxlength="4" pattern="[0-1]{4}" />
+                <input class="input" id="input" type="text" maxlength="4" pattern="^[0-1]{4}$" />
             </div>
-            <button id="input-button">Кнопка</button>
-            <div>
-                <label for="coded">Кодированный:</label>
-                <input id="coded" type="text" maxlength="7" pattern="[0-1]{4}" />
+            <button class="button" id="input-button">Добавить контрольные биты</button>
+            <div class="field">
+                <label for="coded">Кодированная:</label>
+                <input class="input" id="coded" type="text" maxlength="7" pattern="^[0-1]{7}$" />
             </div>
-            <button id="check-button">Check</button>
-            <div>
-                <label for="output">Вывод:</label>
-                <input id="output" type="text" />
+            <button class="button" id="fix-button">Исправить ошибку</button>
+            <div class="field">
+                <label for="fixed">Исправленная:</label>
+                <input class="input" id="fixed" type="text" maxlength=7 patterm="^[0-1]{7}$" disabled />
             </div>
-            <div>
-                <p id="result"></p>
+            <div class="result __hidden" id="result__block">
+                <p id="result__text"></p>
             </div>
+            <button class="button" id="reset-button">Сбросить</button>
         </main>
     </div>
 </body>
