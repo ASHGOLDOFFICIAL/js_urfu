@@ -1,0 +1,34 @@
+in_int %ax
+in_int %bx
+
+mov %cx %ax
+min %cx %bx
+
+mov %ex %ax
+mul %ex %bx
+inc %ex
+
+:0
+cmp %cx %ex
+jeq #1
+    mov %dx %cx
+    mod %dx %ax
+
+    cmp %dx 0
+    jne #2
+    
+    mov %dx %cx
+    mod %dx %bx
+
+    cmp %dx 0
+    jne #2
+    jmp #1
+
+:2
+inc %cx
+jmp #0
+
+:1
+cat %cx
+exit
+
