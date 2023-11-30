@@ -45,7 +45,7 @@ const readToMemory = (mem, file) => {
 }
 
 
-const main = (srcFile="input.spml", instructionSet="anime") => {
+const main = (srcFile="input.anime", instructionSet="anime") => {
     const mem = new Array(200);
     let is = {};
     
