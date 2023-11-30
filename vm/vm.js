@@ -1,6 +1,9 @@
 const fs = require("fs");
 const { argv } = require("process");
+
 const { Interpreter } = require("./interpreter");
+const { spmlIS } = require("./spml-is");
+const { animeIS } = require("./anime-is");
 
 
 const preprocess = (src) => {
@@ -42,14 +45,26 @@ const readToMemory = (mem, file) => {
 }
 
 
-const main = (srcFile="input.spml") => {
+const main = (srcFile="input.spml", instructionSet="anime") => {
     const mem = new Array(200);
-    const interpreter = new Interpreter(mem);
+    let is = {};
+    
+    switch (instructionSet) {
+        case "anime":
+            is = animeIS;
+            break;
+        case "spml":
+            is = spmlIS;
+            break;
+        default:
+            throw new Error("Unknown instruction set")
+    }
+    const interpreter = new Interpreter(mem, is);
+    
     readToMemory(mem, srcFile);
-    //console.log(mem);
     interpreter.run();
 }
 
 
-main(argv[2]);
+main(...argv.slice(2, 4));
 
