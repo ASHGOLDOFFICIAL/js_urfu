@@ -1,6 +1,6 @@
 class GameOfLife {
     EMPTY_TILE_COLOR = "#fff";
-    LIVE_TILE_COLOR = "#ff0";
+    LIVE_TILE_COLOR = "#cc0";
     LIFE_PROB = 0.1
     FIELD_SIZE = 60;
     TILE_SIZE = 10;
